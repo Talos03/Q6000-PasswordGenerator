@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <title>Q6000 Pass-Generator</title>
 </head>
 
@@ -15,6 +16,9 @@
             <button id="boton" type="button" onclick="calcularContraseña()">Calcular</button>
             <div id="contenedorPass"></div>
         </div>
+        <footer class="footer">
+            <h4 id="copyright"></h4>
+        </footer>
     </main>
 </body>
 
@@ -110,6 +114,16 @@
     hr {
         color: black;
     }
+
+    footer {
+        display: flex;
+        justify-content: center;
+        font-size: small;
+        margin-top: 2rem;
+        background-color: rgb(242, 242, 242);
+        width: 100vw;
+        padding: 1rem;
+    }
 </style>
 
 <!-- El codigo que calcula el password -->
@@ -135,4 +149,9 @@
             contenedorPass.prepend(hrLn);
         }
     }
+
+    //Esto cambia la fecha del copyright a la del año actual
+    const fecha = new Date();
+    const añoActual = fecha.getFullYear();
+    const h4Footer = document.getElementById("copyright").textContent = "©️ Copyright Kaled Emanuel Jaluf" + " " + añoActual;
 </script>
