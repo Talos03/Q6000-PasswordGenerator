@@ -5,21 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <title>Q6000 Pass-Generator</title>
+    <title>Pass-Generator - Support</title>
 </head>
 
 <body>
+    <header>
+        <h1>El generador de contraseñas</h1>
+    </header>
     <main>
-        <div class="contenedor">
-            <h3>Ingresa el número de serie del Q6000</h3>
-            <input id="serie" type="number" required>
-            <button id="boton" type="button" onclick="calcularContraseña()">Calcular</button>
-            <div id="contenedorPass"></div>
+        <div class="mainContainer">
+            <div class="contenedor">
+                <div class="selector">
+                    <button type="button" id="Q6000" onclick="showQ6000()">Q6000</button>
+                    <button type="button" id="DX8000" onclick="showDX8000()">DX8000</button>
+                </div>
+                <div id="Q6000Section">
+                    <h3>Ingresa el número de serie del Q6000</h3>
+                    <input id="serie" type="number" required>
+                    <button id="boton" type="button" onclick="calcularContraseña()">Calcular</button>
+                </div>
+                <div id="DX8000Section" class="noActive">
+                    <h3>Ingresa el número de serie del DX8000</h3>
+                    <input id="serieDX" type="text" required>
+                    <button id="botonDX" type="button" onclick="calcularContraseñaDX()">Calcular</button>
+                </div>
+                <div id="contenedorPass"></div>
+            </div>
         </div>
-        <footer class="footer">
-            <h4 id="copyright"></h4>
-        </footer>
     </main>
+
+
+
+    <footer class="footer">
+        <h4 id="copyright"></h4>
+    </footer>
 </body>
 
 </html>
@@ -35,17 +54,19 @@
         /* Degradado de fondo en tonos de naranja */
         margin: 0;
         padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         min-height: 100vh;
+    }
+
+    h1 {
+        text-align: center;
     }
 
     main {
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
+        flex-direction: row;
+        gap: 1rem;
         background-color: rgba(255, 255, 255, 0.8);
         padding: 2rem;
         border-radius: 1rem;
@@ -56,6 +77,25 @@
         margin: 0;
         padding: 0;
         text-align: center;
+    }
+
+    .mainContainer {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .selector {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .selector>button {
+        flex-grow: 1;
+    }
+
+    .noActive {
+        display: none;
     }
 
     .contenedor {
@@ -82,10 +122,16 @@
     }
 
     input {
-        border: none;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 2rem;
         padding: 1rem;
+        margin-bottom: 1rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 2rem;
     }
 
     button {
@@ -149,6 +195,72 @@
             contenedorPass.prepend(hrLn);
         }
     }
+
+    /* Probablemente esto se pueda refactorizar pero no tengo muchas ganas */
+    function showQ6000() {
+        document.getElementById('Q6000Section').style.display = 'grid';
+        document.getElementById('DX8000Section').style.display = 'none';
+        let contendorResult = document.getElementById('contenedorPass');
+
+        /* Mientras exista un hijo dentro del div borra todo */
+        while (contendorResult.firstChild) {
+            contendorResult.removeChild(contendorResult.firstChild);
+        }
+    }
+
+    function showDX8000() {
+        document.getElementById('DX8000Section').style.display = 'grid';
+        document.getElementById('Q6000Section').style.display = 'none';
+        let contendorResult = document.getElementById('contenedorPass');
+
+        /* Mientras exista un hijo dentro del div borra todo */
+        while (contendorResult.firstChild) {
+            contendorResult.removeChild(contendorResult.firstChild);
+        }
+    }
+
+
+    function calcularContraseñaDX() {
+        let serial = document.getElementById('serieDX').value;
+        if (serial !== '') {
+            let contraseña;
+            let contenedorPass = document.getElementById('contenedorPass');
+            let h4serie = document.createElement('h4');
+            let h4pass = document.createElement('h4');
+            let hrLn = document.createElement('hr');
+            /* Tomar los antepenultimos dos digitos y darlos vuelta */
+            let antesDeUltimos2 = serial.slice(-4, -2).split('').reverse().join('');
+            /* Tomo los dos primeros, separo, los doy vuelta y los vuelvo a unir */
+            let iniciales2 = serial.slice(0, 2).split('').reverse().join('');
+            /* Tomo los ultimos dos digitos y los separo, doy vuelta y vuelvo a unir */
+            let finales2 = serial.slice(-2).split('').reverse().join('');
+            /* Uno todo en la contraseña final */
+
+            contraseña = antesDeUltimos2 + iniciales2 + finales2;
+
+
+            h4serie.textContent = `Serie: ${serial}`;
+            h4pass.textContent = `Contraseña: ${contraseña}`;
+            //Prepend hace que siempre se agregue arriba de todo
+            contenedorPass.prepend(h4pass);
+            contenedorPass.prepend(h4serie);
+            contenedorPass.prepend(hrLn);
+        }
+    }
+
+    /* Empiezas por los ultimos 4 digitos, tomas los anteultimos 2 y los invertis.
+   Luego los dos primeros se invierten.
+   Por ultimo los dos ultimos tambien inveritdos.
+   Ejemplo: 20AECA1B1834 - 810243
+   
+   223MCD822285
+    */
+
+    showQ6000();
+
+
+
+
 
     //Esto cambia la fecha del copyright a la del año actual
     const fecha = new Date();
