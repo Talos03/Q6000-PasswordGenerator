@@ -221,22 +221,36 @@
 
 
     function calcularContraseñaDX() {
-        let serial = document.getElementById('serieDX').value;
+        let serial = document.getElementById('serieDXSab').value;
         if (serial !== '') {
-            let contraseña;
-            let contenedorPass = document.getElementById('contenedorPass');
-            let h4serie = document.createElement('h4');
-            let h4pass = document.createElement('h4');
-            let hrLn = document.createElement('hr');
-            /* Tomar los antepenultimos dos digitos y darlos vuelta */
-            let antesDeUltimos2 = serial.slice(-4, -2).split('').reverse().join('');
-            /* Tomo los dos primeros, separo, los doy vuelta y los vuelvo a unir */
-            let iniciales2 = serial.slice(0, 2).split('').reverse().join('');
-            /* Tomo los ultimos dos digitos y los separo, doy vuelta y vuelvo a unir */
-            let finales2 = serial.slice(-2).split('').reverse().join('');
-            /* Uno todo en la contraseña final */
+        et contraseña = [0, 3, 'a', 'b', 2, 1, 'x', 'y'];
+        let contenedorPass = document.getElementById('contenedorPass');
+        let h4serie = document.createElement('h4');
+        let h4pass = document.createElement('h4');
+        let hrLn = document.createElement('hr');
 
-            contraseña = antesDeUltimos2 + iniciales2 + finales2;
+        /* Tomar los digitos abcd */
+        let ultimos4 = serial.slice(-4).split('');
+        contraseña[2] = ultimos4[0];
+        contraseña[3] = ultimos4[1];
+    
+        let xy = ultimos4[2] + (ultimos4[1] * ultimos4[0]);
+        if (xy < 10) {
+            xy = '0' + xy; // Agregar un 0 delante si xy es menor que 10
+        }
+        xy = xy.toString().slice(-2); // Tomar solo los dos últimos dígitos (en caso de que sea mayor a 99)
+
+        contraseña[6] = xy[0];
+        contraseña[7] = xy[1];
+
+        h4serie.textContent = `Serie: ${serial}`;
+        h4pass.textContent = `Contraseña: ${contraseña.join('')}`;
+        //Prepend hace que siempre se agregue arriba de todo
+        contenedorPass.prepend(h4pass);
+        contenedorPass.prepend(h4serie);
+        contenedorPass.prepend(hrLn);
+}
+
 
 
             h4serie.textContent = `Serie: ${serial}`;
